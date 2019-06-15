@@ -1,0 +1,207 @@
+Este año nos centramos en la parte Ejecutar de DevOps. Su aplicación está en producción.
+Tiene un proyecto de DevOps de Azure, tiene un grupo de recursos de Azure con su aplicación implementada. 
+Y ahora ... se va a romper.
+Depende de los equipos arreglar esto. 
+Proporcionamos instrucciones paso a paso de alto nivel, lo que los equipos deben hacer, les proporcionamos enlaces 
+y los equipos pueden resolverlo.
+
+Los retos que tendremos durante el día:
+*Certificado SSL expiró repentinamente
+*Las credenciales son filtradas y rotadas.
+*Ataque de denegación de servicio en su aplicación
+*La tasa de excepción sube
+*Conexiones escamosas causan errores intermitentes
+*La opinión de Twitter para se vuelve negativa debido a un problema con el sitio / la última implementación
+*Ataque de la cadena de suministro a la dependencia.
+*Promoción de la empresa por la campaña de Social Media del equipo de DevOps.
+----------------------------------------------------------------------------------------------------------------------------------
+*Certificado SSL expiró repentinamente
+Descripción
+El sitio web de PartsUnlimited funciona perfectamente bien, pero sucede algo inesperado. 
+El certificado SSL ha caducado y ahora ya no se puede acceder al sitio web con una conexión segura. 
+El proceso interno describe cómo crear un ticket para que el departamento de Operaciones obtenga un nuevo certificado.
+Sin embargo, esto lleva al menos una semana. Este es el tiempo que no tenemos. Este proceso debe ser más rápido.
+Uno de los miembros del equipo de DevOps conoce un servicio que puede utilizar para crear y adquirir certificados de forma automática. 
+Las ventas están en la línea. ¡Necesitas actuar rápido para solucionar este problema!
+
+Objetivos de aprendizaje
+En este reto aprenderás todo sobre
+
+[Requisito previo] Necesita una máquina Windows con PowerShell para seguir las instrucciones paso a paso
+Cree y obtenga un certificado SSL para su sitio web con Let's Encrypt
+Sube el certificado a tu aplicación web de Azure
+Crea un proceso automatizado para renovar el certficate automáticamente.
+Agregue un mecanismo de detección en una compilación y establezca un estado en su panel de control de Azure DevOps
+Solo para organizadores: Cómo empezar localmente.
+Durante el evento, la interrupción se iniciará automáticamente en el sitio web de los participantes. Esto necesita mucha configuración e infraestructura. Para ello, proporcionamos algunas instrucciones manuales sobre cómo iniciar esta interrupción o describimos los síntomas para que pueda "simular" que el sitio web está interrumpido.
+
+Comportamiento del desafío SSL
+El sitio web se ejecuta bajo una URL como * .gdbc-challenge.com. En este desafío, extraeremos el certificado del sitio web y forzaremos el uso de HTTPS. Debido a que no hay un certificado, el sitio web no se servirá más. Depende de usted para resolver eso.
+
+En el reto que usamos.
+
+DNS de Azure para registrar nombres de dominio
+Un nombre de dominio especial para el sitio web.
+Si tiene su propio nombre de dominio y puede acceder al DNS, puede ejecutar este desafío
+----------------------------------------------------------------------------------------------------------------------------------
+*Las credenciales son filtradas y rotadas.
+Descripción
+Un empleado externo ha clonado el código del repositorio interno y ha enviado la base de código completa a Github. Desafortunadamente, la base de código también contenía credenciales para el servidor SQL. Debido a que las credenciales apuntaban a una suscripción de PartsUnlimited Azure, el Administrador de Azure recibió un correo electrónico. En pánico, rotó las credenciales de los Usuarios de SQL Server que se usan en la cadena de conexión, sin pensar en las consecuencias. Necesitas arreglar esto! Y rápido.
+
+Objetivos de aprendizaje
+En este reto aprenderás todo sobre
+
+Escáner de credenciales en la tubería
+Agregue los revisores necesarios para los cambios de código y aplique políticas de sucursales
+Agregar Detección de Application Insights
+Agregar una alerta de monitor de Azure
+Usa secretos en la tubería con keyvault
+Suprimir falsos positivos para el escáner de credenciales.
+Solo para organizadores: Cómo empezar localmente.
+Durante el evento, la interrupción se iniciará automáticamente en el sitio web de los participantes. Esto necesita mucha configuración e infraestructura. Para ello, proporcionamos algunas instrucciones manuales sobre cómo iniciar esta interrupción o describimos los síntomas para que pueda "simular" que el sitio web está interrumpido.
+
+Comportamiento del desafío de Fuga de Credenciales.
+El sitio web utiliza la base de datos SQL que se especifica en config.json. Utiliza un usuario de base de datos, porque usamos servidores SQL compartidos. En este desafío, cambiaremos la contraseña del usuario de la base de datos, lo que dará como resultado un sitio web inactivo.
+
+Usa el comando:
+
+ALTER USER [gdbcuser]
+WITH  PASSWORD = 'newpassword123'
+GO
+----------------------------------------------------------------------------------------------------------------------------------
+*Ataque de denegación de servicio en su aplicación
+Descripción
+Un representante de ventas anuncia en las redes sociales, un gran regalo de los faros. Y el post se vuelve viral. El sitio web comienza a ir muy lento debido a los muchos usuarios que acceden al sitio.
+
+Objetivos de aprendizaje
+En este reto aprenderás todo sobre
+
+Escala del sitio web
+Agregar una ranura de implementación
+Clonar un despliegue en la tubería de lanzamiento a una nueva ranura
+Enrutamiento de tráfico en ranuras de despliegue
+----------------------------------------------------------------------------------------------------------------------------------
+*La tasa de excepción sube
+Descripción
+En esta nueva cultura de confiar en los equipos que hacen lo correcto, de la manera correcta, un empleado ha lanzado un cambio trabajando desde su casa. Aparentemente, implementó el cambio directamente desde Visual Studio utilizando la infame publicación con el botón derecho para actualizar el sitio web. El resto del equipo no tiene ninguna pista sobre lo que se ha implementado. Los usuarios ahora informan que el acceso a la base de datos se ha perdido. El sistema necesita recuperarse rápidamente.
+
+Objetivos de aprendizaje
+En este reto aprenderás cómo:
+
+*Agregar Detección de Application Insights
+*Agregar una alerta de monitor de Azure
+*Eliminar el acceso manual a los recursos de Azure
+*Implementar un proceso que cumpla con los requisitos para controlar que a los humanos no se les debe permitir modificar los entornos directamente, todos deben pasar por un canal de lanzamiento
+*Agregue los marcadores de lanzamiento de Application Insights para la trazabilidad entre implementaciones y compilaciones
+Solo para organizadores: Cómo empezar localmente.
+Durante el evento, la interrupción comenzará automáticamente cuando se inicie un desafío desde el sitio web de desafíos. Esto necesita mucha configuración e infraestructura. Por lo tanto, proporcionamos algunas instrucciones manuales sobre cómo iniciar esta interrupción o describimos los síntomas para que pueda "simular" que el sitio web está interrumpido.
+
+La interrupción simulará que un usuario realice un cambio directamente en el grupo de recursos, en este caso "Bob" tiene acceso de contribución directa al grupo de recursos. Bob va y cambia la cadena de conexión a una conexión local (esto podría ser, por supuesto, cualquier cambio / implementación). Esto hará que la aplicación lance 500 excepciones.
+
+Para simular la interrupción, agregue un usuario al grupo de recursos (permisos RBAC de contribución). Inicie sesión como "Bob" en el portal de Azure y realice un cambio en la cadena de conexión en el archivo config.json (configúrelo en DefaultConnectionString ":" Server = (localdb) \ mssqllocaldb; Initial Catalog = PartsUnlimitedDB; Integrated Security = true;) .
+
+Comportamiento de la tasa de excepción sube desafío
+Al inicio del desafío, el sitio web se ejecuta como de costumbre. Después de que se haya producido la interrupción, se ha introducido una cadena de conexión no válida. El desafío ahora es hacer que el sitio se active y evitar que este problema vuelva a ocurrir. También deseamos agregar un mejor control sobre el proceso de lanzamiento al introducir puertas de aprobación en la tubería, así como una mejor trazabilidad a lo que se ha implementado mediante el uso de anotaciones de lanzamiento.
+
+Fijar
+1.-Ve y verifica que el sitio esté caído.
+2.-Vaya al portal de Azure y use la información de la aplicación para detectar que la aplicación no puede conectarse a la base de datos
+3.-Vaya al portal de Azure y establezca la cadena de conexión de nuevo en una cadena de conexión correcta.
+Prevención
+1.-Agregue la detección de información de la aplicación para obtener información anticipada acerca de que el sistema está inactivo.
+2.-Agregar alerta de monitor de Azure para señalar el problema
+3.-Elimine la regla de Contribución RBAC para Bob para que no pueda cometer el error nuevamente
+4.-Agregue aprobaciones a la tubería para que alguien tenga que revisar lo que se pone en producción.
+5.-Agregue anotaciones de lanzamiento a la canalización para inferir el contexto de lanzamiento en la aplicación Azure para dar seguimiento a lo que se ha implementado.
+----------------------------------------------------------------------------------------------------------------------------------
+*Conexiones escamosas causan errores intermitentes
+
+Descripción
+La conexión a la base de datos se interrumpe de forma intermitente, lo que genera errores y respuestas lentas para los usuarios finales.
+
+Los síntomas
+No todas las solicitudes llegan a la base de datos, a veces fallan por razones aparentes. Si el usuario reintenta la misma solicitud, normalmente tendrá éxito.
+
+Objetivos de aprendizaje
+En este reto aprenderás sobre
+
+*Cómo hacer una aplicación más tolerante con conexiones escamosas.
+*Cómo agregar Application Insights a una aplicación para monitoreo
+
+Solo para organizadores: Cómo empezar localmente.
+Durante el evento, la interrupción se iniciará automáticamente en el sitio web de los participantes. Esto necesita mucha configuración e infraestructura. Para ello, proporcionamos algunas instrucciones manuales sobre cómo iniciar esta interrupción o describimos los síntomas para que pueda "simular" que el sitio web está interrumpido.
+
+Comportamiento del desafío de la conexión escamosa
+El sitio web utiliza la base de datos SQL que se especifica en config.json. En este desafío, deshabilitaremos / habilitaremos las reglas de Azure SQL Firewall para simular que se eliminan las conexiones entre la aplicación web y la base de datos.
+
+Cuando se inicia el contenedor, sucede lo siguiente:
+
+1.-Agrega la IP pública actual del contenedor a la lista de firewall de Azure SQL
+3.-Elimina la regla de firewall del servidor predeterminada que permite el acceso a otros servicios de Azure
+2.-En un bucle
+3.1.- Dormir un rato
+3.2.- Agregar o quitar la regla de firewall de la base de datos que permite el acceso a otros servicios de Azure un par de veces
+Antes de ejecutar el contenedor localmente, asegúrese de que la IP de su cliente pueda alcanzar la base de datos SQL de Azure, agregándola al firewall.
+Vea este enlace sobre cómo hacer esto: https://docs.microsoft.com/en-us/azure/sql-database/sql-database-firewall-configure#manage-server-level-ip-firewall-rules-using -el-portal-azul
+
+NOTA: esto no es necesario cuando el contenedor se ejecutará en Azure durante el evento
+
+Utilice el siguiente comando para extraer y ejecutar la imagen de la ventana acoplable para este desafío. SAS_URL es la URL de la firma de acceso compartido que debe apuntar al archivo settings.json con los metadatos necesarios.
+
+docker run -ti -e 'settingsLocation=<SAS_URL>' gdbc/challenge-flakyconnections:1.0 
+
+Cuando este contenedor se está ejecutando, la aplicación web debería comenzar a dar errores intermitentemente si le das algo de carga.
+
+Para "solucionar" el problema, genere e implemente la aplicación desde la rama llamada challenge-flakyconnections, que utiliza Polly para agregar reintentos al código. Después de la implementación, la aplicación debería dar muchos menos errores (si los hubiera)
+
+Limpiar
+Para finalizar este desafío, detenga el contenedor de interrupción y ejecute el contenedor de parada en su lugar:
+
+docker run -ti -e 'settingsLocation=<SAS_URL>' gdbc/challenge-flakyconnections-stop:1.0 
+
+Este contenedor se asegura de que las reglas del servidor y de la base de datos del servidor de seguridad se restablecen
+----------------------------------------------------------------------------------------------------------------------------------
+*La opinión de Twitter para se vuelve negativa debido a un problema con el sitio / la última implementación
+
+Descripción
+La última implementación se completó con éxito en la producción.
+Sin embargo, nuestras compras están disminuyendo en tasa rápida.
+No hay errores y todo parece verde. 
+¿Que esta pasando? ¿Por qué está el widget de Twitter en el panel de control en rojo?
+----------------------------------------------------------------------------------------------------------------------------------
+*Ataque de la cadena de suministro a la dependencia.
+Descripción
+Un desarrollador publica un par de correcciones de texto inocentes en el sitio web y, de repente, la gente se queja de que el sitio es lento y de que aparecen mensajes extraños en la Consola de desarrollador de JavaScript.
+
+Objetivos de aprendizaje
+En este reto aprenderás todo sobre
+
+*Cómo las dependencias de terceros pueden actualizarse inadvertidamente.
+*Cómo asegurarse de que la canalización de CI / CD use las mismas versiones de paquetes que estaba utilizando en el desarrollo.
+*Cómo usar las herramientas de escaneo de dependencias como Snyk para detectar paquetes vulnerables al principio de su ciclo de desarrollo.
+*Cómo usar herramientas de análisis de dependencia como Snyk para advertirle sobre nuevas vulnerabilidades en aplicaciones ya publicadas.
+
+Información útil:
+*Modo NuGet bloqueado explicado
+https://blog.nuget.org/20181217/Enable-repeatable-package-restores-using-a-lock-file.html
+*Condiciones de YAML
+https://docs.microsoft.com/en-us/azure/devops/pipelines/process/conditions?view=azure-devops&tabs=yaml
+*Variables de las tuberías de Azure
+https://docs.microsoft.com/en-us/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml#system-variables
+*NPM CI explicado
+https://blog.npmjs.org/post/171556855892/introducing-npm-ci-for-faster-more-reliable
+*Snyk para Azure Pipelines
+https://marketplace.visualstudio.com/items?itemName=jessehouwing.vsts-snyk
+
+Información de fondo:
+*Protegiendo su sitio de CryptoJacking con CSP y SRI
+https://scotthelme.co.uk/protect-site-from-cryptojacking-csp-sri/
+*Estoy recolectando números de tarjeta de crédito y contraseñas de su sitio - Parte 1
+https://hackernoon.com/im-harvesting-credit-card-numbers-and-passwords-from-your-site-here-s-how-9a8cb347c5b5
+*Estoy recolectando números de tarjeta de crédito y contraseñas de su sitio - Parte 2
+https://hackernoon.com/part-2-how-to-stop-me-harvesting-credit-card-numbers-and-passwords-from-your-site-844f739659b9
+*Ataques recientes
+https://www.synopsys.com/blogs/software-security/malicious-dependency-supply-chain/
+
+
+
